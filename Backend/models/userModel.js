@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     min: [8, "Password must be atleast 6 characters long"],
+    select : false
   },
   socketID: {
     type: String,
@@ -31,14 +32,15 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.genAuthToken = () => {
   const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET);
+  return token;
 };
 
-userSchema.methods.comparePass = () => {
-  return bcrypt.compare(password, this.password);
+userSchema.methods.comparePass = function(Password) {
+  return bcrypt.compare(Password, this.password);
 };
 
-userSchema.statics.hashPass = (password) => {
-  return bcrypt.hash(password, 10);
+userSchema.statics.hashPass = async (password) => {
+  return await bcrypt.hash(password, 10);
 };
 
 const UserModel = mongoose.model("user", userSchema);
