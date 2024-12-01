@@ -36,9 +36,9 @@ const userLogin = async (req, res, next) => {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
-  const isMatch = await user.comparePass(password);
+  const isMatchPass = await user.comparePass(password);
 
-  if (!isMatch) {
+  if (!isMatchPass) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
@@ -49,7 +49,12 @@ const userLogin = async (req, res, next) => {
   res.status(200).json({ token, user });
 };
 
+const userProfile = async (req, res, next) => {
+  res.status(200).json(req.user);
+};
+
 module.exports = {
   userRegister,
   userLogin,
+  userProfile,
 };
